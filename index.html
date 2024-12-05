@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Traductor ESP a ROM</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            margin-bottom: 20px;
+        }
+
+        .translation-controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .translation-controls button {
+            margin: 0 5px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .translation-controls button:hover {
+            background-color: #666;
+        }
+
+        .output-section {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .error-text {
+            color: #f44336;
+        }
+
+        .admin-panel {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .admin-panel h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .word-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .word-list-table th, .word-list-table td {
+            border: 1px solid #666;
+            padding: 8px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .word-list-table th {
+            background-color: #444;
+        }
+
+        .word-item-button {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .word-item-button:hover {
+            background-color: #e53935;
+        }
+
+        .word-item-button.edit {
+            background-color: #4CAF50;
+        }
+
+        .word-item-button.edit:hover {
+            background-color: #43A047;
+        }
+
+        .add-word-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .add-word-form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        .add-word-form button {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .add-word-form button:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Traductor ESP a ROM</h1>
+        </div>
+        <div class="input-box">
+            <div class="translation-controls">
+                <button onclick="translateText(true)">Traducir a (Español)</button>
+                <button onclick="translateText(false)">Traducir a (Rromalinche)</button>
+                <button onclick="showAdminPanel()">Abrir Modo Administrador</button>
+            </div>
+            <input type="text" id="input-text" placeholder="Escriba aquí el texto a traducir" />
+        </div>
+        <div class="output-section">
+            <span id="output-text">Texto Traducido</span>
+        </div>
+        <div class="error-note" id="error-note" style="display: none;">
+            <span id="error-note-text"></span>
+        </div>
+        <div class="success-note" id="success-note" style="display: none;">
+            Successful
+        </div>
+        <div class="admin-panel" id="admin-panel">
+            <h3>Administrador</h3>
+            <table class="word-list-table">
+                <thead>
+                    <tr>
+                        <th>Español (Mayúscula)</th>
+                        <th>Español (Minúscula)</th>
+                        <th>Romalinche (Mayúscula)</th>
+                        <th>Romalinche (Minúscula)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="word-list-container">
+                    <!-- Lista de palabras -->
+                </tbody>
+            </table>
+            <div class="add-word-form">
+                <h3>Agregar nueva palabra</h3>
+                <input type="text" id="new-word-capital-spanish" placeholder="Español (mayúscula)" />
+                <input type="text" id="new-word-lower-spanish" placeholder="Español (minúscula)" />
+                <input type="text" id="new-word-capital-romalinche" placeholder="Romalinche (mayúscula)" />
+                <input type="text" id="new-word-lower-romalinche" placeholder="Romalinche (minúscula)" />
+                <button onclick="addNewWord(
+                    document.getElementById('new-word-capital-spanish').value,
+                    document.getElementById('new-word-lower-spanish').value,
+                    document.getElementById('new-word-capital-romalinche').value,
+                    document.getElementById('new-word-lower-romalinche').value
+                )">Agregar Palabra</button>
+            </div>
+            <div class="admin-panel-actions">
+                <button onclick="closeAdminPanelWithoutSaving()">Cerrar sin guardar</button>
+                <button onclick="closeAdminPanelWithSaving()">Cerrar con guardar</button>
+            </div>
+        </div>
+    </div>
+    <script src="palabras.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
